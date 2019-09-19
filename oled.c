@@ -8,6 +8,7 @@ const char TAG[] = "OLED";
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "oled.h"
 
 #ifdef	CONFIG_OLED_FONT0
 #include "font0.h"
@@ -261,11 +262,12 @@ oled_task (void *p)
 }
 
 void
-oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda)
+oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda,int8_t flip)
 {                               // Start OLED task and display
    if (scl < 0 || sda < 0 || port < 0)
       return;
    memset (oled, 0, sizeof (oled));
+   oled_flip=flip;
    oled_mutex = xSemaphoreCreateMutex ();       // Shared text access
    oled_port = port;
    oled_address = address;
