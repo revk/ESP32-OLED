@@ -1,20 +1,20 @@
-menu "RevK"
+menu "OLED"
 
 	config OLED_WIDTH
-	string "Width (pixels)"
-	default "128"
+	int "Width (pixels)"
+	default 128
 	help
 		OLED display width
 
 	config OLED_HEIGHT
-	string "Height (pixels)"
-	default "128"
+	int "Height (pixels)"
+	default 128
 	help
 		OLED display height
 
 	config OLED_BPP
-	string "Bits per pixel"
-	default "4"
+	int "Bits per pixel"
+	default 4
 	help
 		OLED display bits per pixel
 
