@@ -62,7 +62,7 @@ static uint8_t const *fonts[] = {
 #endif
 };
 
-static uint8_t oled[CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * 8 / CONFIG_OLED_BPP];
+static uint8_t oled[CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT / CONFIG_OLED_BPP / 8];
 
 static TaskHandle_t oled_task_id = NULL;
 static SemaphoreHandle_t oled_mutex = NULL;
@@ -133,7 +133,7 @@ oled_text (int8_t size, int x, int y, char *t)
       z = 5;
    if (size > sizeof (fonts) / sizeof (*fonts))
       size = sizeof (fonts) / sizeof (*fonts);
-   if (fonts[size])
+   if (!fonts[size])
       return 0;
    int w = (size ? 6 * size : 4);
    int h = (size ? 9 * size : 5);
@@ -143,7 +143,7 @@ oled_text (int8_t size, int x, int y, char *t)
       int c = *t++;
       if (c >= 0x7F)
          continue;
-      const uint8_t *base = fonts[size - 1] + (c - ' ') * h * w * CONFIG_OLED_BPP / 8;
+      const uint8_t *base = fonts[size] + (c - ' ') * h * w * CONFIG_OLED_BPP / 8;
       int ww = w;
       if (c < ' ')
       {                         // Sub space
@@ -262,12 +262,12 @@ oled_task (void *p)
 }
 
 void
-oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda,int8_t flip)
+oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda, int8_t flip)
 {                               // Start OLED task and display
    if (scl < 0 || sda < 0 || port < 0)
       return;
    memset (oled, 0, sizeof (oled));
-   oled_flip=flip;
+   oled_flip = flip;
    oled_mutex = xSemaphoreCreateMutex ();       // Shared text access
    oled_port = port;
    oled_address = address;
