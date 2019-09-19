@@ -3,6 +3,7 @@
 const char TAG[] = "OLED";
 
 #include <unistd.h>
+#include <string.h>
 #include <driver/i2c.h>
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
@@ -62,14 +63,115 @@ static uint8_t const *fonts[] = {
 
 static uint8_t oled[CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * 8 / CONFIG_OLED_BPP];
 
-static TaskHandle_t oled_task_id=NULL;
+static TaskHandle_t oled_task_id = NULL;
 static SemaphoreHandle_t oled_mutex = NULL;
 static int8_t oled_port = 0;
 static int8_t oled_address = 0;
-static int8_t oled_flip=0;
+static int8_t oled_flip = 0;
 static volatile uint8_t oled_changed = 1;
 static volatile uint8_t oled_update = 0;
 static uint8_t oled_contrast = 127;
+
+void
+oled_clear (void)
+{
+   memset (oled, 0, sizeof (oled));
+   oled_changed = 1;
+}
+
+void
+oled_set_contrast (uint8_t contrast)
+{
+   oled_contrast = contrast;
+   oled_changed = 1;
+}
+
+static inline int
+oled_copy (int x, int y, const uint8_t * src, int dx)
+{                               // Copy pixels
+   x -= x % (8 / CONFIG_OLED_BPP);      // Align to byte
+   dx -= dx % (8 / CONFIG_OLED_BPP);    // Align to byte
+   if (y >= 0 && y < CONFIG_OLED_HEIGHT && x + dx >= 0 && x < CONFIG_OLED_WIDTH)
+   {                            // Fits
+      int pix = dx;
+      if (x < 0)
+      {                         // Truncate left
+         pix += x;
+         x = 0;
+      }
+      if (x + pix > CONFIG_OLED_WIDTH)
+         pix = CONFIG_OLED_WIDTH - x;   // Truncate right
+      uint8_t *dst = oled + y * CONFIG_OLED_WIDTH * CONFIG_OLED_BPP / 8 + x * CONFIG_OLED_BPP / 8;
+      if (src)
+      {                         // Copy
+         if (memcmp (dst, src, pix * CONFIG_OLED_BPP / 8))
+         {                      // Changed
+            memcpy (dst, src, pix * CONFIG_OLED_BPP / 8);
+            oled_changed = 1;
+         }
+      } else
+      {                         // Clear
+         memset (dst, 0, pix * CONFIG_OLED_BPP / 8);
+         oled_changed = 1;
+      }
+   }
+   if (!src)
+      return 0;
+   return dx * CONFIG_OLED_BPP / 8;     // Bytes (would be) copied
+}
+
+int
+oled_text (int8_t size, int x, int y, char *t)
+{                               // Size negative for descenders
+   int z = 7;
+   if (size < 0)
+   {
+      size = -size;
+      z = 9;
+   } else if (!size)
+      z = 5;
+   if (size > sizeof (fonts) / sizeof (*fonts))
+      size = sizeof (fonts) / sizeof (*fonts);
+   if (fonts[size])
+      return 0;
+   int w = (size ? 6 * size : 4);
+   int h = (size ? 9 * size : 5);
+   y -= size * 2;               // Baseline
+   while (*t)
+   {
+      int c = *t++;
+      if (c >= 0x7F)
+         continue;
+      const uint8_t *base = fonts[size - 1] + (c - ' ') * h * w * CONFIG_OLED_BPP / 8;
+      int ww = w;
+      if (c < ' ')
+      {                         // Sub space
+         ww = size * c;
+         c = ' ';
+      }
+      if (c == '.' || c == ':')
+      {
+         ww = size * 2;
+         base += size * 2 * CONFIG_OLED_BPP / 8;
+      }                         // Special case for .
+      c -= ' ';
+      for (int dy = 0; dy < size * z; dy++)
+      {
+         oled_copy (x, y + h - 1 - dy, base, ww);
+         base += w * CONFIG_OLED_BPP / 8;
+      }
+      x += ww;
+   }
+   return x;
+}
+
+int
+oled_icon (int x, int y, const void *p, int w, int h)
+{                               // Plot an icon
+   for (int dy = 0; dy < h; dy++)
+      p += oled_copy (x, y + h - dy - 1, p, w);
+   return x + w;
+}
 
 static void
 oled_task (void *p)
@@ -87,7 +189,7 @@ oled_task (void *p)
       i2c_master_write_byte (t, 0xA5, true);    // White
       i2c_master_write_byte (t, 0xAF, true);    // On
       i2c_master_write_byte (t, 0xA0, true);    // Remap
-      i2c_master_write_byte (t, oled_flip ? 0x52 : 0x41, true);  // Match display
+      i2c_master_write_byte (t, oled_flip ? 0x52 : 0x41, true); // Match display
       i2c_master_stop (t);
       e = i2c_master_cmd_begin (oled_port, t, 10 / portTICK_PERIOD_MS);
       i2c_cmd_link_delete (t);
@@ -163,6 +265,7 @@ oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda)
 {                               // Start OLED task and display
    if (scl < 0 || sda < 0 || port < 0)
       return;
+   memset (oled, 0, sizeof (oled));
    oled_mutex = xSemaphoreCreateMutex ();       // Shared text access
    oled_port = port;
    oled_address = address;
@@ -197,7 +300,8 @@ oled_lock (void)
    xSemaphoreTake (oled_mutex, portMAX_DELAY);
 }
 
-void oled_unlock (void)
+void
+oled_unlock (void)
 {                               // Unlock display task
    xSemaphoreGive (oled_mutex);
 }
