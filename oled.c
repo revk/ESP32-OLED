@@ -1,6 +1,6 @@
 // Simple OLED display and text logic
 // Copyright © 2019 Adrian Kennard Andrews & Arnold Ltd
-const char TAG[] = "OLED";
+static const char TAG[] = "OLED";
 
 #include <unistd.h>
 #include <string.h>
