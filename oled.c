@@ -76,6 +76,8 @@ static uint8_t oled_contrast = 127;
 void
 oled_clear (void)
 {
+   if (!oled_mutex)
+      return 0;
    memset (oled, 0, sizeof (oled));
    oled_changed = 1;
 }
@@ -83,6 +85,8 @@ oled_clear (void)
 void
 oled_set_contrast (uint8_t contrast)
 {
+   if (!oled_mutex)
+      return 0;
    oled_contrast = contrast;
    oled_changed = 1;
 }
@@ -124,6 +128,8 @@ oled_copy (int x, int y, const uint8_t * src, int dx)
 int
 oled_text (int8_t size, int x, int y, char *t)
 {                               // Size negative for descenders
+   if (!oled_mutex)
+      return 0;
    int z = 7;
    if (size < 0)
    {
@@ -169,6 +175,8 @@ oled_text (int8_t size, int x, int y, char *t)
 int
 oled_icon (int x, int y, const void *p, int w, int h)
 {                               // Plot an icon
+   if (!oled_mutex)
+      return 0;
    for (int dy = 0; dy < h; dy++)
       p += oled_copy (x, y + h - dy - 1, p, w);
    return x + w;
@@ -298,11 +306,13 @@ oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda, int8_t flip)
 void
 oled_lock (void)
 {                               // Lock display task
-   xSemaphoreTake (oled_mutex, portMAX_DELAY);
+   if (oled_mutex)
+      xSemaphoreTake (oled_mutex, portMAX_DELAY);
 }
 
 void
 oled_unlock (void)
 {                               // Unlock display task
-   xSemaphoreGive (oled_mutex);
+   if (oled_mutex)
+      xSemaphoreGive (oled_mutex);
 }
