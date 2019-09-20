@@ -62,7 +62,7 @@ static uint8_t const *fonts[] = {
 #endif
 };
 
-static uint8_t oled[CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT / CONFIG_OLED_BPP / 8];
+static uint8_t oled[CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * CONFIG_OLED_BPP / 8];
 
 static TaskHandle_t oled_task_id = NULL;
 static SemaphoreHandle_t oled_mutex = NULL;
