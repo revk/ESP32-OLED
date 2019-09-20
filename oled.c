@@ -77,7 +77,7 @@ void
 oled_clear (void)
 {
    if (!oled_mutex)
-      return 0;
+      return;
    memset (oled, 0, sizeof (oled));
    oled_changed = 1;
 }
@@ -86,7 +86,7 @@ void
 oled_set_contrast (uint8_t contrast)
 {
    if (!oled_mutex)
-      return 0;
+      return;
    oled_contrast = contrast;
    oled_changed = 1;
 }
