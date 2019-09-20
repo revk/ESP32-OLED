@@ -143,20 +143,20 @@ oled_text (int8_t size, int x, int y, char *t)
       int c = *t++;
       if (c >= 0x7F)
          continue;
-      const uint8_t *base = fonts[size] + (c - ' ') * h * w * CONFIG_OLED_BPP / 8;
       int ww = w;
       if (c < ' ')
       {                         // Sub space
-         ww = size * c;
+         if (size)
+            ww = size * c;
          c = ' ';
       }
-      if (c == '.' || c == ':')
+      const uint8_t *base = fonts[size] + (c - ' ') * h * w * CONFIG_OLED_BPP / 8;
+      if (size && (c == '.' || c == ':'))
       {
          ww = size * 2;
          base += size * 2 * CONFIG_OLED_BPP / 8;
       }                         // Special case for .
-      c -= ' ';
-      for (int dy = 0; dy < size * z; dy++)
+      for (int dy = 0; dy < (size ? : 1) * z; dy++)
       {
          oled_copy (x, y + h - 1 - dy, base, ww);
          base += w * CONFIG_OLED_BPP / 8;
