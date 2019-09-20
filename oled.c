@@ -182,7 +182,6 @@ oled_task (void *p)
    while (try--)
    {
       xSemaphoreTake (oled_mutex, portMAX_DELAY);
-      oled_changed = 0;
       i2c_cmd_handle_t t = i2c_cmd_link_create ();
       i2c_master_start (t);
       i2c_master_write_byte (t, (oled_address << 1) | I2C_MASTER_WRITE, true);
