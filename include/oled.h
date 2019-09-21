@@ -4,7 +4,7 @@
 void oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda,int8_t flip);
 void oled_lock(void);
 void oled_unlock(void);
-void oled_set_contrast(uint8_t contrast);
+void oled_set_contrast(uint8_t contrast); // Locks and unlocks so do not call while locked
 void oled_clear(void);
 int oled_text (int8_t size, int x, int y, char *t);
 int oled_icon (int x, int y, const void *p, int w, int h);

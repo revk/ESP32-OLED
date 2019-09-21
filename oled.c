@@ -71,7 +71,7 @@ static int8_t oled_address = 0;
 static int8_t oled_flip = 0;
 static volatile uint8_t oled_changed = 1;
 static volatile uint8_t oled_update = 0;
-static volatile uint8_t oled_contrast = 127;
+static uint8_t oled_contrast = 127;
 
 void
 oled_clear (void)
@@ -87,10 +87,12 @@ oled_set_contrast (uint8_t contrast)
 {
    if (!oled_mutex)
       return;
+   xSemaphoreTake (oled_mutex, portMAX_DELAY);
    oled_contrast = contrast;
    if (oled_update)
       oled_update = 1;          // Force sending new contrast
    oled_changed = 1;
+   xSemaphoreGive (oled_mutex);
 }
 
 static inline int
