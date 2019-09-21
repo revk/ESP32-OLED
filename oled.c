@@ -89,6 +89,8 @@ oled_set_contrast (uint8_t contrast)
       return;
    oled_contrast = contrast;
    oled_changed = 1;
+   if (oled_update)
+      oled_update = 1;          // Force sending new contrast
 }
 
 static inline int
