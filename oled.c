@@ -88,9 +88,9 @@ oled_set_contrast (uint8_t contrast)
    if (!oled_mutex)
       return;
    oled_contrast = contrast;
-   oled_changed = 1;
    if (oled_update)
       oled_update = 1;          // Force sending new contrast
+   oled_changed = 1;
 }
 
 static inline int
@@ -246,7 +246,6 @@ oled_task (void *p)
          e = i2c_master_cmd_begin (oled_port, t, 100 / portTICK_PERIOD_MS);
          i2c_cmd_link_delete (t);
       }
-
       if (!e)
       {                         // data
          t = i2c_cmd_link_create ();
