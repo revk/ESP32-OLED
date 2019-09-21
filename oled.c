@@ -71,7 +71,7 @@ static int8_t oled_address = 0;
 static int8_t oled_flip = 0;
 static volatile uint8_t oled_changed = 1;
 static volatile uint8_t oled_update = 0;
-static uint8_t oled_contrast = 127;
+static volatile uint8_t oled_contrast = 127;
 
 void
 oled_clear (void)
