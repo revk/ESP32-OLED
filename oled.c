@@ -95,6 +95,18 @@ oled_set_contrast (uint8_t contrast)
    xSemaphoreGive (oled_mutex);
 }
 
+void
+oled_pixel (int x, int y, int v)
+{
+   if (x < 0 || x >= CONFIG_OLED_WIDTH || y < 0 || y >= CONFIG_OLED_HEIGHT)
+      return;
+   uint8_t s = ((8 - CONFIG_OLED_BPP * (x % (8 / CONFIG_OLED_BPP))) % 8);
+   uint8_t m = (((1 << CONFIG_OLED_BPP) - 1) << s);
+   uint8_t v = ((v << s) & m);
+   uint8_t *p = oled + y * CONFIG_OLED_WIDTH * CONFIG_OLED_BPP / 8 + x * CONFIG_OLED_BPP / 8;
+   *p = (*p & ~m) | v;
+}
+
 static inline int
 oled_copy (int x, int y, const uint8_t * src, int dx)
 {                               // Copy pixels
