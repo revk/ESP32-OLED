@@ -102,9 +102,8 @@ oled_pixel (int x, int y, int v)
       return;
    uint8_t s = ((8 - CONFIG_OLED_BPP * (x % (8 / CONFIG_OLED_BPP))) % 8);
    uint8_t m = (((1 << CONFIG_OLED_BPP) - 1) << s);
-   uint8_t v = ((v << s) & m);
    uint8_t *p = oled + y * CONFIG_OLED_WIDTH * CONFIG_OLED_BPP / 8 + x * CONFIG_OLED_BPP / 8;
-   *p = (*p & ~m) | v;
+   *p = (*p & ~m) | ((v << s) & m);
 }
 
 static inline int
