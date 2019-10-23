@@ -141,10 +141,15 @@ oled_copy (int x, int y, const uint8_t * src, int dx)
 }
 
 int
-oled_text (int8_t size, int x, int y, char *t)
+oled_text (int8_t size, int x, int y, const char *fmt, ...)
 {                               // Size negative for descenders
    if (!oled_mutex)
       return 0;
+   va_list ap;
+   char t[CONFIG_OLED_WIDTH / 4 + 2];
+   va_start (ap, fmt);
+   vsnprintf (t, sizeof (t), fmt, ap);
+   va_end (ap);
    int z = 7;
    if (size < 0)
    {
