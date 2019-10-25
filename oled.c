@@ -100,7 +100,7 @@ oled_pixel (int x, int y, int v)
 {
    if (x < 0 || x >= CONFIG_OLED_WIDTH || y < 0 || y >= CONFIG_OLED_HEIGHT)
       return;
-   uint8_t s = ((8 - CONFIG_OLED_BPP * (x % (8 / CONFIG_OLED_BPP))) % 8);
+   uint8_t s = ((8 - CONFIG_OLED_BPP) - CONFIG_OLED_BPP * (x % (8 / CONFIG_OLED_BPP)));
    uint8_t m = (((1 << CONFIG_OLED_BPP) - 1) << s);
    uint8_t *p = oled + y * CONFIG_OLED_WIDTH * CONFIG_OLED_BPP / 8 + x * CONFIG_OLED_BPP / 8;
    *p = (*p & ~m) | ((v << s) & m);
@@ -146,7 +146,8 @@ oled_text (int8_t size, int x, int y, const char *fmt, ...)
    if (!oled_mutex)
       return 0;
    va_list ap;
-   char temp[CONFIG_OLED_WIDTH / 4 + 2],*t=temp;
+   char temp[CONFIG_OLED_WIDTH / 4 + 2],
+    *t = temp;
    va_start (ap, fmt);
    vsnprintf (temp, sizeof (temp), fmt, ap);
    va_end (ap);
