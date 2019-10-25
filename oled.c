@@ -110,7 +110,7 @@ int
 oled_get (int x, int y)
 {
    if (x < 0 || x >= CONFIG_OLED_WIDTH || y < 0 || y >= CONFIG_OLED_HEIGHT)
-      return;
+      return -1;
    uint8_t s = ((8 - CONFIG_OLED_BPP) - CONFIG_OLED_BPP * (x % (8 / CONFIG_OLED_BPP)));
    uint8_t m = (((1 << CONFIG_OLED_BPP) - 1) << s);
    uint8_t *p = oled + y * CONFIG_OLED_WIDTH * CONFIG_OLED_BPP / 8 + x * CONFIG_OLED_BPP / 8;
