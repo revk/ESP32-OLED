@@ -77,7 +77,7 @@ oled_clear (void)
 {
    if (!oled)
       return;
-   memset (oled, 0, sizeof (oled));
+   memset (oled, 0, CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * CONFIG_OLED_BPP / 8);
    oled_changed = 1;
 }
 
@@ -111,7 +111,7 @@ int
 oled_get (int x, int y)
 {
    if (!oled)
-      return;
+      return -1;
    if (x < 0 || x >= CONFIG_OLED_WIDTH || y < 0 || y >= CONFIG_OLED_HEIGHT)
       return -1;
    uint8_t s = ((8 - CONFIG_OLED_BPP) - CONFIG_OLED_BPP * (x % (8 / CONFIG_OLED_BPP)));
@@ -124,7 +124,7 @@ static inline int
 oled_copy (int x, int y, const uint8_t * src, int dx)
 {                               // Copy pixels
    if (!oled)
-      return;
+      return 0;
    x -= x % (8 / CONFIG_OLED_BPP);      // Align to byte
    dx -= dx % (8 / CONFIG_OLED_BPP);    // Align to byte
    if (y >= 0 && y < CONFIG_OLED_HEIGHT && x + dx >= 0 && x < CONFIG_OLED_WIDTH)
@@ -312,7 +312,7 @@ oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda, int8_t flip)
    oled = malloc (CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * CONFIG_OLED_BPP / 8);
    if (!oled)
       return;
-   memset (oled, 0, sizeof (oled));
+   memset (oled, 0, CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * CONFIG_OLED_BPP / 8);
    oled_flip = flip;
    oled_mutex = xSemaphoreCreateMutex ();       // Shared text access
    oled_port = port;
