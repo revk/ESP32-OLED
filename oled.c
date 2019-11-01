@@ -62,6 +62,7 @@ static uint8_t const *fonts[] = {
 #endif
 };
 
+#define OLEDSIZE (CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * CONFIG_OLED_BPP / 8)
 static uint8_t *oled = NULL;
 static TaskHandle_t oled_task_id = NULL;
 static SemaphoreHandle_t oled_mutex = NULL;
@@ -77,7 +78,7 @@ oled_clear (void)
 {
    if (!oled)
       return;
-   memset (oled, 0, CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * CONFIG_OLED_BPP / 8);
+   memset (oled, 0, OLEDSIZE);
    oled_changed = 1;
 }
 
@@ -287,7 +288,7 @@ oled_task (void *p)
          i2c_master_start (t);
          i2c_master_write_byte (t, (oled_address << 1) | I2C_MASTER_WRITE, true);
          i2c_master_write_byte (t, 0x40, true); // Data
-         i2c_master_write (t, oled, sizeof (oled), true);       // Buffer
+         i2c_master_write (t, oled, OLEDSIZE, true);    // Buffer
          i2c_master_stop (t);
          e = i2c_master_cmd_begin (oled_port, t, 100 / portTICK_PERIOD_MS);
          i2c_cmd_link_delete (t);
@@ -309,10 +310,10 @@ oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda, int8_t flip)
 {                               // Start OLED task and display
    if (scl < 0 || sda < 0 || port < 0)
       return;
-   oled = malloc (CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * CONFIG_OLED_BPP / 8);
+   oled = malloc (OLEDSIZE);
    if (!oled)
       return;
-   memset (oled, 0, CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * CONFIG_OLED_BPP / 8);
+   memset (oled, 0, OLEDSIZE);
    oled_flip = flip;
    oled_mutex = xSemaphoreCreateMutex ();       // Shared text access
    oled_port = port;
