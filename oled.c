@@ -62,8 +62,7 @@ static uint8_t const *fonts[] = {
 #endif
 };
 
-static uint8_t oled[CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * CONFIG_OLED_BPP / 8];
-
+static uint8_t *oled = NULL;
 static TaskHandle_t oled_task_id = NULL;
 static SemaphoreHandle_t oled_mutex = NULL;
 static int8_t oled_port = 0;
@@ -76,7 +75,7 @@ static uint8_t oled_contrast = 127;
 void
 oled_clear (void)
 {
-   if (!oled_mutex)
+   if (!oled)
       return;
    memset (oled, 0, sizeof (oled));
    oled_changed = 1;
@@ -85,7 +84,7 @@ oled_clear (void)
 void
 oled_set_contrast (uint8_t contrast)
 {
-   if (!oled_mutex)
+   if (!oled)
       return;
    xSemaphoreTake (oled_mutex, portMAX_DELAY);
    oled_contrast = contrast;
@@ -98,6 +97,8 @@ oled_set_contrast (uint8_t contrast)
 void
 oled_set (int x, int y, int v)
 {
+   if (!oled)
+      return;
    if (x < 0 || x >= CONFIG_OLED_WIDTH || y < 0 || y >= CONFIG_OLED_HEIGHT)
       return;
    uint8_t s = ((8 - CONFIG_OLED_BPP) - CONFIG_OLED_BPP * (x % (8 / CONFIG_OLED_BPP)));
@@ -109,6 +110,8 @@ oled_set (int x, int y, int v)
 int
 oled_get (int x, int y)
 {
+   if (!oled)
+      return;
    if (x < 0 || x >= CONFIG_OLED_WIDTH || y < 0 || y >= CONFIG_OLED_HEIGHT)
       return -1;
    uint8_t s = ((8 - CONFIG_OLED_BPP) - CONFIG_OLED_BPP * (x % (8 / CONFIG_OLED_BPP)));
@@ -120,6 +123,8 @@ oled_get (int x, int y)
 static inline int
 oled_copy (int x, int y, const uint8_t * src, int dx)
 {                               // Copy pixels
+   if (!oled)
+      return;
    x -= x % (8 / CONFIG_OLED_BPP);      // Align to byte
    dx -= dx % (8 / CONFIG_OLED_BPP);    // Align to byte
    if (y >= 0 && y < CONFIG_OLED_HEIGHT && x + dx >= 0 && x < CONFIG_OLED_WIDTH)
@@ -207,7 +212,7 @@ oled_text (int8_t size, int x, int y, const char *fmt, ...)
 int
 oled_icon (int x, int y, const void *p, int w, int h)
 {                               // Plot an icon
-   if (!oled_mutex)
+   if (!oled)
       return 0;
    for (int dy = 0; dy < h; dy++)
       p += oled_copy (x, y + h - dy - 1, p, w);
@@ -303,6 +308,9 @@ void
 oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda, int8_t flip)
 {                               // Start OLED task and display
    if (scl < 0 || sda < 0 || port < 0)
+      return;
+   oled = malloc (CONFIG_OLED_WIDTH * CONFIG_OLED_HEIGHT * CONFIG_OLED_BPP / 8);
+   if (!oled)
       return;
    memset (oled, 0, sizeof (oled));
    oled_flip = flip;
