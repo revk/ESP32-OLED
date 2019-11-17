@@ -224,7 +224,7 @@ static void
 oled_task (void *p)
 {
    int try = 10;
-   esp_err_t e;
+   esp_err_t e = 0;
    while (try--)
    {
       xSemaphoreTake (oled_mutex, portMAX_DELAY);
@@ -247,6 +247,9 @@ oled_task (void *p)
    if (e)
    {
       ESP_LOGE (TAG, "Configuration failed %s", esp_err_to_name (e));
+      free (oled);
+      oled = NULL;
+      oled_port = -1;
       vTaskDelete (NULL);
       return;
    }
@@ -322,6 +325,8 @@ oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda, int8_t flip)
    {
       ESP_LOGE (TAG, "I2C config fail");
       oled_port = -1;
+      free (old);
+      oled = NULL;
    } else
    {
       i2c_config_t config = {
