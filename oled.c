@@ -325,7 +325,7 @@ oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda, int8_t flip)
    {
       ESP_LOGE (TAG, "I2C config fail");
       oled_port = -1;
-      free (old);
+      free (oled);
       oled = NULL;
    } else
    {
