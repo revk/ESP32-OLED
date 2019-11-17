@@ -87,12 +87,12 @@ oled_set_contrast (uint8_t contrast)
 {
    if (!oled)
       return;
-   xSemaphoreTake (oled_mutex, portMAX_DELAY);
+   xQueueTakeMutexRecursive (oled_mutex, portMAX_DELAY);
    oled_contrast = contrast;
    if (oled_update)
       oled_update = 1;          // Force sending new contrast
    oled_changed = 1;
-   xSemaphoreGive (oled_mutex);
+   xQueueGiveMutexRecursive (oled_mutex);
 }
 
 void
@@ -227,7 +227,7 @@ oled_task (void *p)
    esp_err_t e = 0;
    while (try--)
    {
-      xSemaphoreTake (oled_mutex, portMAX_DELAY);
+      xQueueTakeMutexRecursive (oled_mutex, portMAX_DELAY);
       i2c_cmd_handle_t t = i2c_cmd_link_create ();
       i2c_master_start (t);
       i2c_master_write_byte (t, (oled_address << 1) | I2C_MASTER_WRITE, true);
@@ -239,7 +239,7 @@ oled_task (void *p)
       i2c_master_stop (t);
       e = i2c_master_cmd_begin (oled_port, t, 10 / portTICK_PERIOD_MS);
       i2c_cmd_link_delete (t);
-      xSemaphoreGive (oled_mutex);
+      xQueueGiveMutexRecursive (oled_mutex);
       if (!e)
          break;
       sleep (1);
@@ -261,7 +261,7 @@ oled_task (void *p)
          usleep (100000);
          continue;
       }
-      xSemaphoreTake (oled_mutex, portMAX_DELAY);
+      xQueueTakeMutexRecursive (oled_mutex, portMAX_DELAY);
       oled_changed = 0;
       i2c_cmd_handle_t t;
       e = 0;
@@ -304,7 +304,7 @@ oled_task (void *p)
          oled_changed = 1;
       } else
          oled_update = 2;       // All OK
-      xSemaphoreGive (oled_mutex);
+      xQueueGiveMutexRecursive (oled_mutex);
    }
 }
 
@@ -352,12 +352,12 @@ void
 oled_lock (void)
 {                               // Lock display task
    if (oled_mutex)
-      xSemaphoreTake (oled_mutex, portMAX_DELAY);
+      xQueueTakeMutexRecursive (oled_mutex, portMAX_DELAY);
 }
 
 void
 oled_unlock (void)
 {                               // Unlock display task
    if (oled_mutex)
-      xSemaphoreGive (oled_mutex);
+      xQueueGiveMutexRecursive (oled_mutex);
 }
