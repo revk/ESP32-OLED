@@ -87,12 +87,12 @@ oled_set_contrast (uint8_t contrast)
 {
    if (!oled)
       return;
-   xSemaphoreTake (oled_mutex, portMAX_DELAY);
+   oled_lock ();
    oled_contrast = contrast;
    if (oled_update)
       oled_update = 1;          // Force sending new contrast
    oled_changed = 1;
-   xSemaphoreGive (oled_mutex);
+   oled_unlock ();
 }
 
 void
@@ -160,7 +160,7 @@ oled_copy (int x, int y, const uint8_t * src, int dx)
 int
 oled_text (int8_t size, int x, int y, const char *fmt, ...)
 {                               // Size negative for descenders
-   if (!oled_mutex)
+   if (!oled)
       return 0;
    va_list ap;
    char temp[CONFIG_OLED_WIDTH / 4 + 2],
@@ -227,7 +227,7 @@ oled_task (void *p)
    esp_err_t e = 0;
    while (try--)
    {
-      xSemaphoreTake (oled_mutex, portMAX_DELAY);
+      oled_lock ();
       i2c_cmd_handle_t t = i2c_cmd_link_create ();
       i2c_master_start (t);
       i2c_master_write_byte (t, (oled_address << 1) | I2C_MASTER_WRITE, true);
@@ -239,7 +239,7 @@ oled_task (void *p)
       i2c_master_stop (t);
       e = i2c_master_cmd_begin (oled_port, t, 10 / portTICK_PERIOD_MS);
       i2c_cmd_link_delete (t);
-      xSemaphoreGive (oled_mutex);
+      oled_unlock ();
       if (!e)
          break;
       sleep (1);
@@ -261,7 +261,7 @@ oled_task (void *p)
          usleep (100000);
          continue;
       }
-      xSemaphoreTake (oled_mutex, portMAX_DELAY);
+      oled_lock ();
       oled_changed = 0;
       i2c_cmd_handle_t t;
       e = 0;
@@ -304,7 +304,7 @@ oled_task (void *p)
          oled_changed = 1;
       } else
          oled_update = 2;       // All OK
-      xSemaphoreGive (oled_mutex);
+      oled_unlock ();
    }
 }
 
@@ -313,12 +313,12 @@ oled_start (int8_t port, uint8_t address, int8_t scl, int8_t sda, int8_t flip)
 {                               // Start OLED task and display
    if (scl < 0 || sda < 0 || port < 0)
       return;
+   oled_mutex = xSemaphoreCreateMutex ();       // Shared text access
    oled = malloc (OLEDSIZE);
    if (!oled)
       return;
    memset (oled, 0, OLEDSIZE);
    oled_flip = flip;
-   oled_mutex = xSemaphoreCreateMutex ();       // Shared text access
    oled_port = port;
    oled_address = address;
    if (i2c_driver_install (oled_port, I2C_MODE_MASTER, 0, 0, 0))
