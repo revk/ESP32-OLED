@@ -1,0 +1,555 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "1.5\" OLED Module driver with GPIO"
+Date "2021-03-08"
+Rev "1"
+Comp "Adrian Kennard / Andrews & Arnold Ltd"
+Comment1 "@TheRealRevK"
+Comment2 "www.me.uk"
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L RF_Module:ESP32-WROOM-32 U2
+U 1 1 60467763
+P 7650 2250
+F 0 "U2" H 7650 3831 50  0000 C CNN
+F 1 "ESP32-WROOM-32" H 7650 3740 50  0000 C CNN
+F 2 "RF_Module:ESP32-WROOM-32" H 7650 750 50  0001 C CNN
+F 3 "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf" H 7350 2300 50  0001 C CNN
+	1    7650 2250
+	1    0    0    -1  
+$EndComp
+$Comp
+L RevK:D24V5F3-NoSHDN M1
+U 1 1 6046A5CD
+P 3550 1100
+F 0 "M1" H 4328 996 50  0000 L CNN
+F 1 "D24V5F3-NoSHDN" H 4328 905 50  0000 L CNN
+F 2 "RevK:D24V5F3-NoSHDN" H 3950 1250 50  0001 C CNN
+F 3 "https://www.pololu.com/product/2842/resources" H 3950 1250 50  0001 C CNN
+	1    3550 1100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Interface_USB:FT230XQ U1
+U 1 1 6046E472
+P 4200 2700
+F 0 "U1" H 4200 3581 50  0000 C CNN
+F 1 "FT230XQ" H 4200 3490 50  0000 C CNN
+F 2 "Package_DFN_QFN:QFN-16-1EP_4x4mm_P0.65mm_EP2.1x2.1mm" H 5550 2100 50  0001 C CNN
+F 3 "https://www.ftdichip.com/Support/Documents/DataSheets/ICs/DS_FT230X.pdf" H 4200 2700 50  0001 C CNN
+	1    4200 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x08_Male J3
+U 1 1 60473312
+P 7400 5200
+F 0 "J3" H 7508 5681 50  0000 C CNN
+F 1 "GPIO" H 7508 5590 50  0000 C CNN
+F 2 "Connector_Molex:Molex_SPOX_5268-08A_1x08_P2.50mm_Horizontal" H 7400 5200 50  0001 C CNN
+F 3 "~" H 7400 5200 50  0001 C CNN
+	1    7400 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:USB_C_Receptacle_USB2.0 J1
+U 1 1 604764E2
+P 1800 1750
+F 0 "J1" H 1907 2617 50  0000 C CNN
+F 1 "USB-C" H 1907 2526 50  0000 C CNN
+F 2 "RevK:USC16-TR-Round" H 1950 1750 50  0001 C CNN
+F 3 "https://www.usb.org/sites/default/files/documents/usb_type-c.zip" H 1950 1750 50  0001 C CNN
+	1    1800 1750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 604938D6
+P 2600 1700
+F 0 "R1" H 2670 1746 50  0000 L CNN
+F 1 "5K1" H 2670 1655 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 2530 1700 50  0001 C CNN
+F 3 "~" H 2600 1700 50  0001 C CNN
+	1    2600 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 604954A7
+P 2850 1700
+F 0 "R2" H 2920 1746 50  0000 L CNN
+F 1 "5K1" H 2920 1655 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 2780 1700 50  0001 C CNN
+F 3 "~" H 2850 1700 50  0001 C CNN
+	1    2850 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x02_Male J2
+U 1 1 60467E1F
+P 3750 750
+F 0 "J2" H 3858 931 50  0000 C CNN
+F 1 "DC" H 3858 840 50  0000 C CNN
+F 2 "RevK:DC" H 3750 750 50  0001 C CNN
+F 3 "~" H 3750 750 50  0001 C CNN
+	1    3750 750 
+	-1   0    0    1   
+$EndComp
+$Comp
+L RevK:SCD30-4pin M3
+U 1 1 6046B191
+P 2100 4600
+F 0 "M3" H 2828 4051 50  0000 L CNN
+F 1 "SCD30-4pin" H 2828 3960 50  0000 L CNN
+F 2 "RevK:SCD30-4pin" H 2500 3350 50  0001 C CNN
+F 3 "https://media.digikey.com/pdf/Data%20Sheets/Sensirion%20PDFs/CD_DS_SCD30_Datasheet_D1.pdf" H 2100 4650 50  0001 C CNN
+	1    2100 4600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R9
+U 1 1 6047260F
+P 9450 4500
+F 0 "R9" H 9520 4546 50  0000 L CNN
+F 1 "NF" H 9520 4455 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 9380 4500 50  0001 C CNN
+F 3 "~" H 9450 4500 50  0001 C CNN
+	1    9450 4500
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R8
+U 1 1 604730A4
+P 9200 4500
+F 0 "R8" H 9270 4546 50  0000 L CNN
+F 1 "NF" H 9270 4455 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 9130 4500 50  0001 C CNN
+F 3 "~" H 9200 4500 50  0001 C CNN
+	1    9200 4500
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R7
+U 1 1 604743DE
+P 8950 4500
+F 0 "R7" H 9020 4546 50  0000 L CNN
+F 1 "NF" H 9020 4455 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 8880 4500 50  0001 C CNN
+F 3 "~" H 8950 4500 50  0001 C CNN
+	1    8950 4500
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R6
+U 1 1 604743E4
+P 8700 4500
+F 0 "R6" H 8770 4546 50  0000 L CNN
+F 1 "NF" H 8770 4455 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 8630 4500 50  0001 C CNN
+F 3 "~" H 8700 4500 50  0001 C CNN
+	1    8700 4500
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 604764BB
+P 8450 4500
+F 0 "R5" H 8520 4546 50  0000 L CNN
+F 1 "NF" H 8520 4455 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 8380 4500 50  0001 C CNN
+F 3 "~" H 8450 4500 50  0001 C CNN
+	1    8450 4500
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 604764C1
+P 8200 4500
+F 0 "R4" H 8270 4546 50  0000 L CNN
+F 1 "NF" H 8270 4455 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 8130 4500 50  0001 C CNN
+F 3 "~" H 8200 4500 50  0001 C CNN
+	1    8200 4500
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 604764C7
+P 7950 4500
+F 0 "R3" H 8020 4546 50  0000 L CNN
+F 1 "NF" H 8020 4455 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 7880 4500 50  0001 C CNN
+F 3 "~" H 7950 4500 50  0001 C CNN
+	1    7950 4500
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0101
+U 1 1 60487ED8
+P 1300 2650
+F 0 "#PWR0101" H 1300 2400 50  0001 C CNN
+F 1 "GND" H 1305 2477 50  0000 C CNN
+F 2 "" H 1300 2650 50  0001 C CNN
+F 3 "" H 1300 2650 50  0001 C CNN
+	1    1300 2650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1300 2650 1500 2650
+Wire Wire Line
+	1500 2650 1800 2650
+Connection ~ 1500 2650
+$Comp
+L power:GND #PWR0102
+U 1 1 6048883F
+P 4200 5700
+F 0 "#PWR0102" H 4200 5450 50  0001 C CNN
+F 1 "GND" H 4205 5527 50  0000 C CNN
+F 2 "" H 4200 5700 50  0001 C CNN
+F 3 "" H 4200 5700 50  0001 C CNN
+	1    4200 5700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4500 5700 4200 5700
+Wire Wire Line
+	4500 5000 4200 5000
+Wire Wire Line
+	4200 5000 4200 5700
+Connection ~ 4200 5700
+$Comp
+L power:GND #PWR0103
+U 1 1 6048935D
+P 1850 5200
+F 0 "#PWR0103" H 1850 4950 50  0001 C CNN
+F 1 "GND" H 1855 5027 50  0000 C CNN
+F 2 "" H 1850 5200 50  0001 C CNN
+F 3 "" H 1850 5200 50  0001 C CNN
+	1    1850 5200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2100 4750 1850 4750
+Wire Wire Line
+	1850 4750 1850 5200
+$Comp
+L power:GND #PWR0104
+U 1 1 6048ADEF
+P 7650 3650
+F 0 "#PWR0104" H 7650 3400 50  0001 C CNN
+F 1 "GND" H 7655 3477 50  0000 C CNN
+F 2 "" H 7650 3650 50  0001 C CNN
+F 3 "" H 7650 3650 50  0001 C CNN
+	1    7650 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0105
+U 1 1 6048B1E6
+P 4300 3400
+F 0 "#PWR0105" H 4300 3150 50  0001 C CNN
+F 1 "GND" H 4305 3227 50  0000 C CNN
+F 2 "" H 4300 3400 50  0001 C CNN
+F 3 "" H 4300 3400 50  0001 C CNN
+	1    4300 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4300 3400 4200 3400
+Connection ~ 4300 3400
+Wire Wire Line
+	4200 3400 4100 3400
+Connection ~ 4200 3400
+Wire Wire Line
+	3500 2900 3100 2900
+Wire Wire Line
+	3100 2900 3100 2300
+Wire Wire Line
+	3100 2300 3500 2300
+Wire Wire Line
+	3550 2300 3550 2000
+Wire Wire Line
+	3550 2000 4100 2000
+Wire Wire Line
+	4100 2000 4300 2000
+Connection ~ 4100 2000
+$Comp
+L power:GND #PWR0106
+U 1 1 6048DFCC
+P 3150 1400
+F 0 "#PWR0106" H 3150 1150 50  0001 C CNN
+F 1 "GND" H 3155 1227 50  0000 C CNN
+F 2 "" H 3150 1400 50  0001 C CNN
+F 3 "" H 3150 1400 50  0001 C CNN
+	1    3150 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0107
+U 1 1 6048E383
+P 3150 750
+F 0 "#PWR0107" H 3150 500 50  0001 C CNN
+F 1 "GND" H 3155 577 50  0000 C CNN
+F 2 "" H 3150 750 50  0001 C CNN
+F 3 "" H 3150 750 50  0001 C CNN
+	1    3150 750 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 750  3150 750 
+Wire Wire Line
+	3550 1300 3150 1300
+Wire Wire Line
+	3150 1300 3150 1400
+Wire Wire Line
+	3550 1200 3350 1200
+Wire Wire Line
+	3350 1200 3350 650 
+Wire Wire Line
+	3350 650  3550 650 
+NoConn ~ 3550 1100
+Wire Wire Line
+	3350 1200 2800 1200
+Wire Wire Line
+	2800 1200 2800 1150
+Wire Wire Line
+	2800 1150 2400 1150
+Connection ~ 3350 1200
+$Comp
+L power:+3V3 #PWR0108
+U 1 1 604928EC
+P 4650 2000
+F 0 "#PWR0108" H 4650 1850 50  0001 C CNN
+F 1 "+3V3" H 4665 2173 50  0000 C CNN
+F 2 "" H 4650 2000 50  0001 C CNN
+F 3 "" H 4650 2000 50  0001 C CNN
+	1    4650 2000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4650 2000 4300 2000
+Connection ~ 4300 2000
+Wire Wire Line
+	3550 1400 3550 2000
+Connection ~ 3550 2000
+Wire Wire Line
+	2400 1850 2400 1950
+NoConn ~ 2400 2250
+NoConn ~ 2400 2350
+Wire Wire Line
+	2400 1450 2600 1450
+Wire Wire Line
+	2600 1450 2600 1550
+Wire Wire Line
+	2400 1350 2850 1350
+Wire Wire Line
+	2850 1350 2850 1550
+Wire Wire Line
+	2850 1850 2600 1850
+Wire Wire Line
+	2600 1850 2600 2650
+Wire Wire Line
+	2600 2650 1800 2650
+Connection ~ 2600 1850
+Connection ~ 1800 2650
+Wire Wire Line
+	2700 2700 3500 2700
+Connection ~ 2400 1950
+Wire Wire Line
+	2400 1650 2400 1750
+Wire Wire Line
+	3500 2600 2850 2600
+Wire Wire Line
+	2850 2600 2850 2050
+Wire Wire Line
+	2850 2050 2450 2050
+Wire Wire Line
+	2450 2050 2450 1750
+Wire Wire Line
+	2450 1750 2400 1750
+Connection ~ 2400 1750
+Wire Wire Line
+	2400 1950 2400 2150
+Wire Wire Line
+	2400 2150 2700 2150
+Wire Wire Line
+	2700 2150 2700 2700
+$Comp
+L power:+3V3 #PWR0109
+U 1 1 604B3BB6
+P 7650 850
+F 0 "#PWR0109" H 7650 700 50  0001 C CNN
+F 1 "+3V3" H 7665 1023 50  0000 C CNN
+F 2 "" H 7650 850 50  0001 C CNN
+F 3 "" H 7650 850 50  0001 C CNN
+	1    7650 850 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0110
+U 1 1 604B79CA
+P 4500 4900
+F 0 "#PWR0110" H 4500 4750 50  0001 C CNN
+F 1 "+3V3" H 4515 5073 50  0000 C CNN
+F 2 "" H 4500 4900 50  0001 C CNN
+F 3 "" H 4500 4900 50  0001 C CNN
+	1    4500 4900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0111
+U 1 1 604B7E17
+P 2100 4650
+F 0 "#PWR0111" H 2100 4500 50  0001 C CNN
+F 1 "+3V3" H 2115 4823 50  0000 C CNN
+F 2 "" H 2100 4650 50  0001 C CNN
+F 3 "" H 2100 4650 50  0001 C CNN
+	1    2100 4650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7600 5100 8200 5100
+Wire Wire Line
+	7600 5300 8700 5300
+Wire Wire Line
+	7600 5500 9200 5500
+Wire Wire Line
+	7600 5600 9450 5600
+$Comp
+L power:GND #PWR0112
+U 1 1 604C9E86
+P 10600 4900
+F 0 "#PWR0112" H 10600 4650 50  0001 C CNN
+F 1 "GND" H 10605 4727 50  0000 C CNN
+F 2 "" H 10600 4900 50  0001 C CNN
+F 3 "" H 10600 4900 50  0001 C CNN
+	1    10600 4900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7600 4900 10600 4900
+Wire Wire Line
+	7950 4650 7950 5000
+Wire Wire Line
+	7600 5000 7950 5000
+Connection ~ 7950 5000
+Wire Wire Line
+	7950 5000 9900 5000
+Wire Wire Line
+	8200 4650 8200 5100
+Connection ~ 8200 5100
+Wire Wire Line
+	8200 5100 9900 5100
+Wire Wire Line
+	8450 4650 8450 5200
+Wire Wire Line
+	7600 5200 8450 5200
+Connection ~ 8450 5200
+Wire Wire Line
+	8450 5200 9900 5200
+Wire Wire Line
+	8700 4650 8700 5300
+Connection ~ 8700 5300
+Wire Wire Line
+	8700 5300 9900 5300
+Wire Wire Line
+	8950 4650 8950 5400
+Wire Wire Line
+	7600 5400 8950 5400
+Connection ~ 8950 5400
+Wire Wire Line
+	8950 5400 9900 5400
+Wire Wire Line
+	9200 4650 9200 5500
+Connection ~ 9200 5500
+Wire Wire Line
+	9200 5500 9900 5500
+Wire Wire Line
+	9450 4650 9450 5600
+Connection ~ 9450 5600
+Wire Wire Line
+	9450 5600 9900 5600
+Wire Wire Line
+	7950 4350 8200 4350
+Wire Wire Line
+	8450 4350 8700 4350
+Wire Wire Line
+	8450 4350 8200 4350
+Connection ~ 8450 4350
+Connection ~ 8200 4350
+Wire Wire Line
+	8950 4350 8700 4350
+Connection ~ 8700 4350
+Wire Wire Line
+	9200 4350 8950 4350
+Connection ~ 8950 4350
+Wire Wire Line
+	9450 4350 9200 4350
+Connection ~ 9200 4350
+Wire Wire Line
+	9450 4350 10600 4350
+Connection ~ 9450 4350
+$Comp
+L power:+3V3 #PWR0113
+U 1 1 604E7ABD
+P 10600 4350
+F 0 "#PWR0113" H 10600 4200 50  0001 C CNN
+F 1 "+3V3" H 10615 4523 50  0000 C CNN
+F 2 "" H 10600 4350 50  0001 C CNN
+F 3 "" H 10600 4350 50  0001 C CNN
+	1    10600 4350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4900 2600 5250 2600
+$Comp
+L power:GND #PWR0114
+U 1 1 604E9ABF
+P 5250 2600
+F 0 "#PWR0114" H 5250 2350 50  0001 C CNN
+F 1 "GND" H 5255 2427 50  0000 C CNN
+F 2 "" H 5250 2600 50  0001 C CNN
+F 3 "" H 5250 2600 50  0001 C CNN
+	1    5250 2600
+	1    0    0    -1  
+$EndComp
+NoConn ~ 4900 2800
+NoConn ~ 4900 2900
+NoConn ~ 4900 3000
+Wire Wire Line
+	4900 2500 6100 2500
+Wire Wire Line
+	6100 2500 6100 1050
+Wire Wire Line
+	6100 1050 7050 1050
+Wire Wire Line
+	4900 3100 6250 3100
+Wire Wire Line
+	6250 3100 6250 550 
+Wire Wire Line
+	6250 550  8450 550 
+Wire Wire Line
+	8450 550  8450 1050
+Wire Wire Line
+	8450 1050 8250 1050
+NoConn ~ 7050 1250
+NoConn ~ 7050 1350
+NoConn ~ 3750 4150
+$Comp
+L RevK:OLED1.5-RGB M2
+U 1 1 6050B2B3
+P 4500 4900
+F 0 "M2" H 5778 4551 50  0000 L CNN
+F 1 "OLED1.5-RGB" H 5778 4460 50  0000 L CNN
+F 2 "RevK:OLED1.5-RGB" H 5250 4000 50  0001 C CNN
+F 3 "" H 4500 5000 50  0001 C CNN
+	1    4500 4900
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
